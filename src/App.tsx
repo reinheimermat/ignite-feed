@@ -1,10 +1,23 @@
 import { Header } from './components/Header'
 
+import styles from './App.module.css'
+import { Post } from './components/Post'
+import { Sidebar } from './components/Sidebar'
+
 function App() {
   return (
     <div className="App">
       <Header />
-      <h1>React App</h1>
+
+      <div className={styles.wrapper}>
+        <Sidebar />
+        <main>
+          <Post
+            author="Matheus Reinheimer"
+            content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat nostrum i."
+          />
+        </main>
+      </div>
     </div>
   )
 }
