@@ -2,40 +2,60 @@ import { Avatar } from '../Avatar'
 import { Comment } from '../Comment'
 import styles from './index.module.css'
 
-export function Post() {
+interface PostProps {
+  author: {
+    avatarUrl: string
+    name: string
+    role: string
+  }
+  publishedAt: string | undefined
+  content:
+    | {
+        type: string
+        content: string
+      }[]
+    | undefined
+}
+
+export function Post({ author, publishedAt, content }: PostProps) {
+  const publishedAtDate = publishedAt ? new Date(publishedAt) : new Date()
+
+  const publishedDateFormatted = new Intl.DateTimeFormat('en-US', {
+    day: '2-digit',
+    month: 'long',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(publishedAtDate)
+
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar src="https:github.com/reinheimermat.png" />
+          <Avatar src={author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <strong>Matheus Reinheimer</strong>
-            <span>Web Developer</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
         </div>
 
         <time title="06 Apr at 08:13h" dateTime="2024-05-11 08:13:30">
-          Published 1 hour ago
+          {publishedDateFormatted}
         </time>
       </header>
 
       <div className={styles.content}>
-        <p>Hello everyone 👋</p>
-
-        <p>
-          I just uploaded another project in my portfolio. It&apos;s a project I
-          did at the NLW Return, Rocketseat event. The project name is
-          DoctorCare 🚀
-        </p>
-
-        <p>
-          👉 <a href="#">jane.design/doctorcare</a>
-        </p>
-
-        <p>
-          <a href="#">#newproject</a> <a href="#">#nlw</a>{' '}
-          <a href="#">#rocketseat</a>
-        </p>
+        {content?.map((line, index) => {
+          if (line.type === 'paragraph') {
+            return <p key={index}>{line.content}</p>
+          } else if (line.type === 'link') {
+            return (
+              <a key={index} href="#">
+                {line.content}
+              </a>
+            )
+          }
+          return null
+        })}
       </div>
 
       <form className={styles.commentForm}>
