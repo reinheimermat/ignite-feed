@@ -41,7 +41,15 @@ export function Post({ author, publishedAt, content }: PostProps) {
   function handleNewCommentChange(
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) {
+    event.target.setCustomValidity('')
     setNewCommentText(event.target.value)
+  }
+
+  function handleNewCommentInvalid(
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) {
+    event.target.setCustomValidity('The comment cannot be empty')
+    alert('The comment cannot be empty')
   }
 
   function deleteComment(commentsToDelete: string[]) {
@@ -51,6 +59,8 @@ export function Post({ author, publishedAt, content }: PostProps) {
 
     setComments(commentsWithoutDeletedOne)
   }
+
+  const isNewCommentEmpty = newCommentText.length === 0
 
   return (
     <article className={styles.post}>
@@ -91,10 +101,14 @@ export function Post({ author, publishedAt, content }: PostProps) {
           name="comment"
           onChange={handleNewCommentChange}
           value={newCommentText}
+          onInvalid={handleNewCommentInvalid}
+          required
         />
 
         <footer>
-          <button type="submit">Comment</button>
+          <button type="submit" disabled={isNewCommentEmpty}>
+            Comment
+          </button>
         </footer>
       </form>
 
